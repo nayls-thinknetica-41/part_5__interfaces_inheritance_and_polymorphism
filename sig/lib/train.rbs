@@ -1,0 +1,21 @@
+module Train
+  # Train
+  class Base
+    attr_accessor number: Integer
+    attr_accessor speed: Integer
+    attr_reader route: Hash[Symbol, Station | Array[Station]]
+
+    def initialize: (Integer number, Symbol train_type) -> void
+
+    def wagons: () -> Array[Wagon::Cargo | Wagon::Passenger]
+    def route=: (Route route) -> void
+
+    def stopped?: () -> bool
+    def forward: () -> void
+    def backward: () -> void
+
+    def suitable_wagon?: (Wagon::Cargo | Wagon::Passenger wagon) -> bool
+    def attach: (Wagon::Cargo | Wagon::Passenger wagon) -> void
+    def unpin: (Wagon::Cargo | Wagon::Passenger wagon) -> void
+  end
+end

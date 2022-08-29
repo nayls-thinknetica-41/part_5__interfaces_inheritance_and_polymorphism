@@ -1,0 +1,4 @@
+module Wagon
+  class Passenger < Base
+  end
+end

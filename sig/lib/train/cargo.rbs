@@ -1,0 +1,6 @@
+module Train
+  # Train::Cargo
+  class Cargo < Train::Base
+    def initialize: (Integer number, Symbol train_type) -> void
+  end
+end

@@ -1,0 +1,4 @@
+module Wagon
+  class Base
+  end
+end
