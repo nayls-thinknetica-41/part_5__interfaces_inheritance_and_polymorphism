@@ -1,0 +1,16 @@
+# Cli
+module Cli
+  extend ::Cli
+
+  HELP: ::String
+
+  def commands: () -> String
+
+  def commands!: (?String? env) -> String
+
+  def commands_not_found: () -> void
+
+  def help: (?controls: bool controls, ?clear: bool clear) -> void
+
+  def control: () -> void
+end

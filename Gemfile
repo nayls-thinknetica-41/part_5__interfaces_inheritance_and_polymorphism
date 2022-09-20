@@ -8,6 +8,7 @@ group :test do
   gem 'faker', '~> 2.22'
   gem 'fuubar', '~> 2.5'
   gem 'parallel_tests', '~> 3.11'
+  gem 'simplecov', '0.21.2', require: false
 end
 
 group :development do

@@ -1,0 +1,12 @@
+module Cli
+  # Route
+  module Route
+    extend ::Cli::Station
+
+    HELP: ::String
+
+    def help: (?controls: bool controls, ?clear: bool clear) -> void
+
+    def control: () -> void
+  end
+end

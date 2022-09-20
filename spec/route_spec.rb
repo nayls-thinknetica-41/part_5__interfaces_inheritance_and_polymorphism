@@ -17,11 +17,21 @@ describe 'Route' do
     @rt1 = Route.new(@st1, @st2)
   end
 
-  after do
-    # Do nothing
-  end
-
   context 'Имеет' do
+    it 'начальную и конечную станцию' do
+      expect { Route.new }.to raise_error(ArgumentError)
+    end
+
+    it 'правильный тип станциий и выкидывает ошибку если тип не подходящий' do
+      expect { Route.new(Station.new, nil) }
+        .to raise_error(TypeError)
+
+      expect { Route.new([], []) }.to raise_error(TypeError)
+
+      expect { Route.new(Station.new, []) }.to raise_error(TypeError)
+      expect { Route.new(nil, nil) }.to raise_error(TypeError)
+    end
+
     it 'начальную и конечную станцию' do
       expect(@rt1.routes.size).to eq(2)
       expect(@rt1.routes.first).not_to eq(nil)

@@ -17,7 +17,7 @@ module Train
       @number = number
       @wagons = []
       @speed = 0
-      @route = { previous: nil, current: nil, next: nil, routes_list: [] }
+      @route = { previous: nil, current: nil, routes_list: [] }
       @train_type = train_type
     end
 
@@ -41,45 +41,55 @@ module Train
                                @wagons.include?(wagon)
     end
 
+    def status
+      raise ArgumentError, 'route not initialize' if @route.nil? || @route[:routes_list].empty?
+
+      cur_index = @route[:routes_list].find_index(@route[:current])
+
+      {
+        previous: @route[:previous],
+        current: @route[:current],
+        next: (
+          @route[:routes_list][cur_index + 1] unless @route[:routes_list][cur_index + 1].nil?
+        )
+      }
+    end
+
     def route=(route)
       return unless @route[:routes_list].empty?
 
       @route[:previous] = nil
       @route[:current] = route.routes.first unless route.routes.first.nil?
-      @route[:next] = route.routes.last unless route.routes.last.nil?
       @route[:routes_list] = route.routes
     end
 
     def forward
-      return if @route[:routes_list].empty?
+      return self if @route[:routes_list].empty?
 
       cur_index = @route[:routes_list].find_index(@route[:current])
-      return unless (cur_index < @route[:routes_list].size) && !@route[:next].nil?
+      return self if @route[:routes_list][cur_index + 1].nil?
 
       @route[:previous] = @route[:current]
-      @route[:current] = @route[:next]
+      @route[:current] = @route[:routes_list][cur_index + 1]
 
-      @route[:next] = if @route[:current] == @route[:routes_list].last
-                        nil
-                      else
-                        @route[:routes_list][cur_index + 1]
-                      end
+      self
     end
 
     def backward
-      return if @route[:routes_list].empty?
+      return self if @route[:routes_list].empty?
+
+      return self if @route[:current].eql?(@route[:routes_list].first)
 
       cur_index = @route[:routes_list].find_index(@route[:current])
-      return unless cur_index.positive? && !@route[:previous].nil?
 
-      @route[:next] = @route[:current]
       @route[:current] = @route[:previous]
-
-      @route[:previous] = if @route[:current] == @route[:routes_list].first
+      @route[:previous] = if @route[:previous].eql?(@route[:routes_list].first)
                             nil
                           else
-                            @route[:routes_list][cur_index - 1]
+                            @route[:routes_list][cur_index - 2]
                           end
+
+      self
     end
 
     protected

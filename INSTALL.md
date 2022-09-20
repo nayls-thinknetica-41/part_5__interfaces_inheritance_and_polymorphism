@@ -16,3 +16,10 @@ bin/bundle install --binstubs
 bin/bundle install --binstubs
 bin/bundle exec guard
 ```
+
+```bash
+bin/guard
+
+bin/rspec --color --require spec_helper --format Fuubar
+bin/rubocop --enable-pending-cops --format fuubar
+```

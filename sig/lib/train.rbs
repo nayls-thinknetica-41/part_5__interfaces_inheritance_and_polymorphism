@@ -11,8 +11,8 @@ module Train
     def route=: (Route route) -> void
 
     def stopped?: () -> bool
-    def forward: () -> void
-    def backward: () -> void
+    def forward: () -> Train::Base
+    def backward: () -> Train::Base
 
     def suitable_wagon?: (Wagon::Cargo | Wagon::Passenger wagon) -> bool
     def attach: (Wagon::Cargo | Wagon::Passenger wagon) -> void

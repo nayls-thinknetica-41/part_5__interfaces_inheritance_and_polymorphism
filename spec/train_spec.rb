@@ -52,7 +52,7 @@ describe 'Train' do
       expect(train.number).to eq(train_number)
       expect(train.wagons).to eq([])
       expect(train.speed).to eq(0)
-      expect(train.route).to eq({ previous: nil, current: nil, next: nil, routes_list: [] })
+      expect(train.route).to eq({ previous: nil, current: nil, routes_list: [] })
     end
 
     it 'номер (произвольная строка) указывается при создании экземпляра класса грузового поезда' do
@@ -64,7 +64,7 @@ describe 'Train' do
       expect(train.number).to eq(train_number)
       expect(train.wagons).to eq([])
       expect(train.speed).to eq(0)
-      expect(train.route).to eq({ previous: nil, current: nil, next: nil, routes_list: [] })
+      expect(train.route).to eq({ previous: nil, current: nil, routes_list: [] })
     end
   end
 
@@ -194,60 +194,112 @@ describe 'Train' do
     end
 
     it 'перемещаться между станциями, указанными в маршруте вперед на 1 станцию за раз' do
-      @train.route = @rt1
+      @train.route = Route.new(@st1, @st3).insert(@st2)
 
-      expect(@train.route[:previous].nil?).to eql(true)
-      expect(@train.route[:current]).to eql(@st1)
-      expect(@train.route[:next]).to eql(@st3)
-      expect(@train.route[:routes_list]).to eql([@st1, @st3])
+      expect(@train.route)
+        .to eql(
+          {
+            previous: nil,
+            current: @st1,
+            routes_list: [@st1, @st2, @st3]
+          }
+        )
+
+      @train.forward.forward
+
+      expect(@train.route)
+        .to eql(
+          {
+            previous: @st2,
+            current: @st3,
+            routes_list: [@st1, @st2, @st3]
+          }
+        )
 
       @train.forward
 
-      expect(@train.route[:previous]).to eql(@st1)
-      expect(@train.route[:current]).to eql(@st3)
-      expect(@train.route[:next]).to eql(nil)
-      expect(@train.route[:routes_list]).to eql([@st1, @st3])
-
-      @train.forward
-
-      expect(@train.route[:previous]).to eql(@st1)
-      expect(@train.route[:current]).to eql(@st3)
-      expect(@train.route[:next]).to eql(nil)
-      expect(@train.route[:routes_list]).to eql([@st1, @st3])
+      expect(@train.route)
+        .to eql(
+          {
+            previous: @st2,
+            current: @st3,
+            routes_list: [@st1, @st2, @st3]
+          }
+        )
     end
 
     it 'перемещаться между станциями, указанными в маршруте назад на 1 станцию за раз' do
-      @train.route = @rt1
+      @train.route = Route.new(@st1, @st3).insert(@st2)
 
-      @train.forward
-      @train.forward
+      expect(@train.route)
+        .to eql(
+          {
+            previous: nil,
+            current: @st1,
+            routes_list: [@st1, @st2, @st3]
+          }
+        )
 
-      expect(@train.route[:previous]).to eql(@st1)
-      expect(@train.route[:current]).to eql(@st3)
-      expect(@train.route[:next]).to eql(nil)
-      expect(@train.route[:routes_list]).to eql([@st1, @st3])
+      @train.backward.backward
+
+      expect(@train.route)
+        .to eql(
+          {
+            previous: nil,
+            current: @st1,
+            routes_list: [@st1, @st2, @st3]
+          }
+        )
+
+      @train.forward.forward
+
+      expect(@train.route)
+        .to eql(
+          {
+            previous: @st2,
+            current: @st3,
+            routes_list: [@st1, @st2, @st3]
+          }
+        )
 
       @train.backward
 
-      expect(@train.route[:previous]).to eql(nil)
-      expect(@train.route[:current]).to eql(@st1)
-      expect(@train.route[:next]).to eql(@st3)
-      expect(@train.route[:routes_list]).to eql([@st1, @st3])
+      expect(@train.route)
+        .to eql(
+          {
+            previous: @st1,
+            current: @st2,
+            routes_list: [@st1, @st2, @st3]
+          }
+        )
 
       @train.backward
 
-      expect(@train.route[:previous]).to eql(nil)
-      expect(@train.route[:current]).to eql(@st1)
-      expect(@train.route[:next]).to eql(@st3)
-      expect(@train.route[:routes_list]).to eql([@st1, @st3])
+      expect(@train.route)
+        .to eql(
+          {
+            previous: nil,
+            current: @st1,
+            routes_list: [@st1, @st2, @st3]
+          }
+        )
     end
 
     it 'возвращать предыдущую, текущую, следующую станцию на основе маршрута' do
       @train.route = @rt1
 
-      expect(@train.route[:previous]).to eql(nil)
-      expect(@train.route[:current]).to eql(@st1)
-      expect(@train.route[:next]).to eql(@st3)
+      expect(@train.status)
+        .to eql(
+          {
+            previous: nil,
+            current: @st1,
+            next: @st3
+          }
+        )
+    end
+
+    it 'возвращать ошибку при показе маршрута если он не задан' do
+      expect { @train.status }.to raise_error(ArgumentError)
     end
   end
 end
